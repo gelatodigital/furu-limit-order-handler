@@ -1,5 +1,25 @@
 # Gelato Limit Order with Furucombo Proxy
 
+## Setup
+
+1. Install dependencies
+
+```
+yarn
+```
+
+2. Compile
+
+```
+yarn compile
+```
+
+3. Run tests
+
+```
+yarn test
+```
+
 ## Contract Dependencies
 
 [**Gelato**](https://etherscan.io/address/0x3CACa7b48D0573D793d3b0279b5F0029180E83b6) 
