@@ -9,7 +9,7 @@ import {
   IHFunds,
   IProxy,
   IRegistry,
-  IUniswapV2Router02
+  IUniswapV2Router02,
 } from "../typechain";
 import { getTokenFromFaucet } from "./helpers";
 
@@ -123,7 +123,7 @@ describe("FuruLimitOrder", function () {
       );
 
       const { secret, witness } = getWitnessAndSecret();
-      
+
       const placeOrderData = hGelatoLimitOrder.interface.encodeFunctionData(
         "placeLimitOrder",
         [ETH_ADDRESS, daiAddress, sellAmount, minReturn, witness, secret]

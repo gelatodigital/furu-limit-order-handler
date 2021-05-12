@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.6.2 <0.8.0;
+pragma solidity 0.6.12;
 
 import {IGelatoPineCore} from "./interfaces/IGelatoPineCore.sol";
 import {IERC20} from "./interfaces/IERC20.sol";
