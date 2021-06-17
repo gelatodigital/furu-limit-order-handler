@@ -47,7 +47,9 @@ describe("FuruLimitOrder", function () {
     const hGelatoLimitOrderFactory = await ethers.getContractFactory(
       "HGelatoLimitOrder"
     );
-    const hGelatoLimitOrderDeploy = await hGelatoLimitOrderFactory.deploy();
+    const hGelatoLimitOrderDeploy = await hGelatoLimitOrderFactory.deploy(
+      gelatoPineAddress
+    );
 
     hGelatoLimitOrder = (await ethers.getContractAt(
       "HGelatoLimitOrder",
@@ -124,11 +126,25 @@ describe("FuruLimitOrder", function () {
 
       const { secret, witness } = getWitnessAndSecret();
 
-      const placeOrderData = hGelatoLimitOrder.interface.encodeFunctionData(
-        "placeLimitOrder",
-        [ETH_ADDRESS, daiAddress, sellAmount, minReturn, witness, secret]
+      const encodedData = new ethers.utils.AbiCoder().encode(
+        ["address", "uint256"],
+        [daiAddress, minReturn]
       );
 
+      const placeOrderData = hGelatoLimitOrder.interface.encodeFunctionData(
+        "placeLimitOrder",
+        [
+          sellAmount,
+          limitOrderModuleAddress,
+          ETH_ADDRESS,
+          await user0.getAddress(),
+          witness,
+          encodedData, //encode the limit order DATA
+          secret,
+        ]
+      );
+
+      // YOU ARE HERE, PROBABLY WE SHOULD EXPOSE A LIB FUNCTION FOR THAT!
       const preBalance = await waffle.provider.getBalance(user0.address);
 
       const placeTx = await proxy
@@ -151,10 +167,6 @@ describe("FuruLimitOrder", function () {
       expect(preBalance.sub(sellAmount.add(txCost))).to.be.eq(postBalance);
 
       // Check if order exist
-      const encodedData = new ethers.utils.AbiCoder().encode(
-        ["address", "uint256"],
-        [daiAddress, minReturn]
-      );
       const orderExists = await gelatoPine.existOrder(
         limitOrderModuleAddress,
         ETH_ADDRESS,
@@ -230,9 +242,22 @@ describe("FuruLimitOrder", function () {
 
       const { secret, witness } = getWitnessAndSecret();
 
+      const encodedData = new ethers.utils.AbiCoder().encode(
+        ["address", "uint256"],
+        [daiAddress, minReturn]
+      );
+
       const placeOrderData = hGelatoLimitOrder.interface.encodeFunctionData(
         "placeLimitOrder",
-        [ETH_ADDRESS, daiAddress, sellAmount, minReturn, witness, secret]
+        [
+          sellAmount,
+          limitOrderModuleAddress,
+          ETH_ADDRESS,
+          await user0.getAddress(),
+          witness,
+          encodedData, //encode the limit order DATA
+          secret,
+        ]
       );
 
       const placeTx = await proxy
@@ -245,11 +270,6 @@ describe("FuruLimitOrder", function () {
       await placeTx.wait();
 
       // Check if order exist
-      const encodedData = new ethers.utils.AbiCoder().encode(
-        ["address", "uint256"],
-        [daiAddress, minReturn]
-      );
-
       const preCancelEthBalance = await waffle.provider.getBalance(
         user0.address
       );
@@ -298,16 +318,29 @@ describe("FuruLimitOrder", function () {
 
       const { secret, witness } = getWitnessAndSecret();
 
+      const encodedData = new ethers.utils.AbiCoder().encode(
+        ["address", "uint256"],
+        [ETH_ADDRESS, minReturn]
+      );
+
       const placeOrderData = hGelatoLimitOrder.interface.encodeFunctionData(
         "placeLimitOrder",
-        [daiAddress, ETH_ADDRESS, sellAmount, minReturn, witness, secret]
+        [
+          sellAmount,
+          limitOrderModuleAddress,
+          daiAddress,
+          await user0.getAddress(),
+          witness,
+          encodedData, //encode the limit order DATA
+          secret,
+        ]
       );
 
       const preBalance = await token0.balanceOf(user0.address);
 
       await token0.connect(user0).approve(proxy.address, sellAmount);
 
-      await proxy
+      const tx = await proxy
         .connect(user0)
         .batchExec(
           [hFunds.address, hGelatoLimitOrder.address],
@@ -318,6 +351,8 @@ describe("FuruLimitOrder", function () {
           }
         );
 
+      console.log(tx);
+
       const postBalance = await token0.balanceOf(user0.address);
 
       // Check if tokens or ETH got transferred out of users wallet
@@ -325,10 +360,6 @@ describe("FuruLimitOrder", function () {
       expect(preBalance.sub(sellAmount)).to.be.eq(postBalance);
 
       // Check if order exist
-      const encodedData = new ethers.utils.AbiCoder().encode(
-        ["address", "uint256"],
-        [ETH_ADDRESS, minReturn]
-      );
       const orderExists = await gelatoPine.existOrder(
         limitOrderModuleAddress,
         daiAddress,
@@ -408,9 +439,22 @@ describe("FuruLimitOrder", function () {
 
       const { secret, witness } = getWitnessAndSecret();
 
+      const encodedData = new ethers.utils.AbiCoder().encode(
+        ["address", "uint256"],
+        [ETH_ADDRESS, minReturn]
+      );
+
       const placeOrderData = hGelatoLimitOrder.interface.encodeFunctionData(
         "placeLimitOrder",
-        [daiAddress, ETH_ADDRESS, sellAmount, minReturn, witness, secret]
+        [
+          sellAmount,
+          limitOrderModuleAddress,
+          daiAddress,
+          await user0.getAddress(),
+          witness,
+          encodedData, //encode the limit order DATA
+          secret,
+        ]
       );
 
       await token0.approve(proxy.address, sellAmount);
@@ -425,11 +469,6 @@ describe("FuruLimitOrder", function () {
             gasPrice: GAS_PRICE,
           }
         );
-
-      const encodedData = new ethers.utils.AbiCoder().encode(
-        ["address", "uint256"],
-        [ETH_ADDRESS, minReturn]
-      );
 
       const preCancelDaiBalance = await token0.balanceOf(user0.address);
 
