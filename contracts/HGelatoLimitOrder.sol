@@ -155,11 +155,7 @@ contract Config {
     uint256 public constant PERCENTAGE_BASE = 1 ether;
 
     // Handler post-process type. Others should not happen now.
-    enum HandlerType {
-        Token,
-        Custom,
-        Others
-    }
+    enum HandlerType {Token, Custom, Others}
 }
 
 abstract contract HandlerBase is Storage, Config {
@@ -402,9 +398,8 @@ library Address {
         require(isContract(target), "Address: call to non-contract");
 
         // solhint-disable-next-line avoid-low-level-calls
-        (bool success, bytes memory returndata) = target.call{value: value}(
-            data
-        );
+        (bool success, bytes memory returndata) =
+            target.call{value: value}(data);
         return _verifyCallResult(success, returndata, errorMessage);
     }
 
@@ -704,9 +699,8 @@ library SafeERC20 {
         address spender,
         uint256 value
     ) internal {
-        uint256 newAllowance = token.allowance(address(this), spender).add(
-            value
-        );
+        uint256 newAllowance =
+            token.allowance(address(this), spender).add(value);
         _callOptionalReturn(
             token,
             abi.encodeWithSelector(
@@ -722,10 +716,11 @@ library SafeERC20 {
         address spender,
         uint256 value
     ) internal {
-        uint256 newAllowance = token.allowance(address(this), spender).sub(
-            value,
-            "SafeERC20: decreased allowance below zero"
-        );
+        uint256 newAllowance =
+            token.allowance(address(this), spender).sub(
+                value,
+                "SafeERC20: decreased allowance below zero"
+            );
         _callOptionalReturn(
             token,
             abi.encodeWithSelector(
@@ -747,10 +742,11 @@ library SafeERC20 {
         // we're implementing it ourselves. We use {Address.functionCall} to perform this call, which verifies that
         // the target address contains contract code and also asserts for success in the low-level call.
 
-        bytes memory returndata = address(token).functionCall(
-            data,
-            "SafeERC20: low-level call failed"
-        );
+        bytes memory returndata =
+            address(token).functionCall(
+                data,
+                "SafeERC20: low-level call failed"
+            );
         if (returndata.length > 0) {
             // Return data is optional
             // solhint-disable-next-line max-line-length
