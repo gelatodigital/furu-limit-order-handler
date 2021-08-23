@@ -807,7 +807,7 @@ contract HGelatoLimitOrder is HandlerBase {
                 )
             );
         } else {
-            IERC20(inToken).approve(ERC20_ORDER_ROUTER, value);
+            IERC20(inToken).safeIncreaseAllowance(ERC20_ORDER_ROUTER, value);
             IERC20OrderRouter(ERC20_ORDER_ROUTER).depositToken(
                 value,
                 module,
