@@ -25,7 +25,7 @@ const uniHalderAddress = "0x842A8Dea50478814e2bFAFF9E5A27DC0D1FdD37c";
 const daiAddress = "0x6b175474e89094c44da98b954eedeac495271d0f";
 const wethAddress = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
 const Zero = ethers.constants.HashZero;
-const erc20OrderRouter = "0x5fb00386558ccc219e51b69d8e963ef20b0c267a"
+const erc20OrderRouter = "0x5fb00386558ccc219e51b69d8e963ef20b0c267a";
 
 const GAS_PRICE = ethers.utils.parseUnits("50", "gwei");
 
@@ -98,8 +98,6 @@ describe("FuruLimitOrder", function () {
     //   hFundsAddress,
     //   ethers.utils.formatBytes32String("Inject Funds")
     // );
-
-
 
     proxy = (await ethers.getContractAt("IProxy", proxyAddress)) as IProxy;
 
