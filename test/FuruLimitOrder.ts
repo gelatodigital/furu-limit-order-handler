@@ -14,7 +14,7 @@ import {
 import { getTokenFromFaucet } from "./helpers";
 
 const gelatoAddress = "0x3CACa7b48D0573D793d3b0279b5F0029180E83b6";
-const proxyAddress = "0xA013AfbB9A92cEF49e898C87C060e6660E050569";
+const proxyAddress = "0x59dAa74f2D15c87Aac435eC18Cb559f92490C100";
 const handlerRegistryAddress = "0xd4258B13C9FADb7623Ca4b15DdA34b7b85b842C7";
 const hFundsAddress = "0x95f44674C3b8A3EC56589A8ddAC7D7FD09DB3e8E";
 const gelatoPineAddress = "0x36049D479A97CdE1fC6E2a5D2caE30B666Ebf92B";
@@ -25,6 +25,7 @@ const uniHalderAddress = "0x842A8Dea50478814e2bFAFF9E5A27DC0D1FdD37c";
 const daiAddress = "0x6b175474e89094c44da98b954eedeac495271d0f";
 const wethAddress = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
 const Zero = ethers.constants.HashZero;
+const erc20OrderRouter = "0x5fb00386558ccc219e51b69d8e963ef20b0c267a"
 
 const GAS_PRICE = ethers.utils.parseUnits("50", "gwei");
 
@@ -48,7 +49,8 @@ describe("FuruLimitOrder", function () {
       "HGelatoLimitOrder"
     );
     const hGelatoLimitOrderDeploy = await hGelatoLimitOrderFactory.deploy(
-      gelatoPineAddress
+      gelatoPineAddress,
+      erc20OrderRouter
     );
 
     hGelatoLimitOrder = (await ethers.getContractAt(
@@ -89,6 +91,15 @@ describe("FuruLimitOrder", function () {
         hGelatoLimitOrder.address,
         ethers.utils.formatBytes32String("Gelato Limit Order")
       );
+
+    // await registry
+    // .connect(registryOwner)
+    // .register(
+    //   hFundsAddress,
+    //   ethers.utils.formatBytes32String("Inject Funds")
+    // );
+
+
 
     proxy = (await ethers.getContractAt("IProxy", proxyAddress)) as IProxy;
 
