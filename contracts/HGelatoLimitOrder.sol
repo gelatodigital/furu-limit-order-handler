@@ -3,6 +3,7 @@ pragma solidity 0.6.12;
 
 import {IGelatoPineCore} from "./interfaces/IGelatoPineCore.sol";
 import {IERC20} from "./interfaces/IERC20.sol";
+import {IERC20OrderRouter} from "./interfaces/IERC20OrderRouter.sol";
 
 library LibStack {
     function setAddress(bytes32[] storage _stack, address _input) internal {
@@ -763,13 +764,15 @@ contract HGelatoLimitOrder is HandlerBase {
 
     // prettier-ignore
     address public immutable GELATO_PINE;
+    address public immutable ERC20_ORDER_ROUTER;
 
     function getContractName() public pure override returns (string memory) {
         return "HGelatoLimitOrder";
     }
 
-    constructor(address _gelatoPine) public {
+    constructor(address _gelatoPine, address _erc20OrderRouter) public {
         GELATO_PINE = _gelatoPine;
+        ERC20_ORDER_ROUTER = _erc20OrderRouter;
     }
 
     function placeLimitOrder(
@@ -800,15 +803,15 @@ contract HGelatoLimitOrder is HandlerBase {
                 )
             );
         } else {
-            IERC20(inToken).transfer(
-                IGelatoPineCore(GELATO_PINE).vaultOfOrder(
-                    module,
-                    inToken,
-                    owner,
-                    witness,
-                    limitOrderData
-                ),
-                value
+            IERC20(inToken).safeIncreaseAllowance(ERC20_ORDER_ROUTER, value);
+            IERC20OrderRouter(ERC20_ORDER_ROUTER).depositToken(
+                value,
+                module,
+                inToken,
+                owner,
+                witness,
+                limitOrderData,
+                secret
             );
         }
     }
