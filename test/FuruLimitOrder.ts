@@ -15,8 +15,8 @@ import { getTokenFromFaucet } from "./helpers";
 
 const gelatoAddress = "0x3CACa7b48D0573D793d3b0279b5F0029180E83b6";
 const proxyAddress = "0x59dAa74f2D15c87Aac435eC18Cb559f92490C100";
-const handlerRegistryAddress = "0xd4258B13C9FADb7623Ca4b15DdA34b7b85b842C7";
-const hFundsAddress = "0x95f44674C3b8A3EC56589A8ddAC7D7FD09DB3e8E";
+const handlerRegistryAddress = "0x84Faf5b559f58d651E51300C5a7D078cb964E691";
+const hFundsAddress = "0x9fa5971E471e17CBC4C6682533ae949bdB364E20";
 const gelatoPineAddress = "0x36049D479A97CdE1fC6E2a5D2caE30B666Ebf92B";
 const limitOrderModuleAddress = "0x037fc8e71445910e1E0bBb2a0896d5e9A7485318";
 const ETH_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
@@ -306,6 +306,7 @@ describe("FuruLimitOrder", function () {
       // const injectData = hFunds.interface.encodeFunctionData("inject", [
       //   [ETH_ADDRESS], [sellAmount]
       // ])
+      await getTokenFromFaucet(daiAddress, user0.address, sellAmount);
 
       const amountOut = (
         await uniRouter.getAmountsOut(sellAmount, [daiAddress, wethAddress])
@@ -427,6 +428,7 @@ describe("FuruLimitOrder", function () {
       // const injectData = hFunds.interface.encodeFunctionData("inject", [
       //   [ETH_ADDRESS], [sellAmount]
       // ])
+      await getTokenFromFaucet(daiAddress, user0.address, sellAmount);
 
       const amountOut = (
         await uniRouter.getAmountsOut(sellAmount, [daiAddress, wethAddress])
